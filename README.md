@@ -41,12 +41,6 @@ python app.py
 
 浏览器访问 http://127.0.0.1:5000
 
-## 关于 59 元 AI 额度的配置说明
-
-在 `AI_BASE_URL` 中设置平台地址，在 `AI_MODEL` 中设置模型名。例如：
-
-- `AI_BASE_URL=https://aiping.cn/api/v1`
-- `AI_MODEL=GLM-4.7-Flash`
 
 ## 用户操作指南（简短）
 
