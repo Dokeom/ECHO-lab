@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>反内耗：拒信粉碎机</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+	<div class="aurora a1"></div>
+	<div class="aurora a2"></div>
+
+	<header class="top-nav panel">
+		<div class="brand-block">
+			<div class="brand">Echo 拒信粉碎机</div>
+			<p class="hint">先稳情绪，再拆问题，最后制定下一局赢法。</p>
+		</div>
+		<div class="top-actions">
+			<button type="button" class="ghost-btn active" data-topview="console">控制台</button>
+			<button type="button" class="ghost-btn" data-topview="history">历史记录</button>
+		</div>
+	</header>
+
+	<div class="app-shell">
+		<aside class="sidebar panel">
+			<div class="side-title">粉碎实验室</div>
+			<p class="hint">把拒绝从“判决”改写成“数据”。</p>
+
+			<nav class="side-nav" id="sideNav">
+				<button type="button" class="nav-item active" data-mode="emotion">情绪粉碎</button>
+				<button type="button" class="nav-item" data-mode="review">硬核复盘</button>
+				<button type="button" class="nav-item" data-mode="simchat">拟真聊天</button>
+			</nav>
+
+			<div class="hud-group">
+				<p class="hud-label">情绪护盾</p>
+				<div class="shield-track"><div class="shield-fill" id="moodBar"></div></div>
+				<div class="hud-grid">
+					<div class="hud-chip"><span>连击</span><strong id="comboCount">0</strong></div>
+					<div class="hud-chip"><span>段位</span><strong id="levelBadge">青铜复活者</strong></div>
+				</div>
+				<button type="button" id="resetRankBtn" class="secondary-btn hud-reset-btn">重置段位</button>
+			</div>
+
+			<div class="status-card">
+				<p class="status-title">状态播报</p>
+				<p class="status-text" id="statusText">等待输入中：你可以先选择模式开始。</p>
+			</div>
+		</aside>
+
+		<main class="main-area">
+			<section id="consoleView" class="top-view">
+			<div class="mode-toggle panel">
+				<button type="button" class="mode-btn active" data-mode="emotion">情绪粉碎</button>
+				<button type="button" class="mode-btn" data-mode="review">硬核复盘</button>
+				<button type="button" class="mode-btn" data-mode="simchat">拟真聊天</button>
+			</div>
+
+			<section class="mode-view" id="emotionView">
+				<section class="panel hero">
+					<p class="badge">EMOTIONAL REBOUND LAB</p>
+					<h1>将拒信转化为动力</h1>
+					<p class="sub">输入岗位、简历和拒信后，生成落选归因与4周反弹计划；也支持不同语言风格输出。</p>
+				</section>
+
+				<section class="panel emotion-input">
+					<label for="companyInput">目标公司（可选）</label>
+					<input id="companyInput" type="text" placeholder="例如：某互联网公司 / 某外企业务线">
+
+					<label for="jobInput">目标职位要求</label>
+					<textarea id="jobInput" rows="5" placeholder="粘贴职位JD，尤其是岗位职责与硬性要求..."></textarea>
+
+					<label for="resumeInput">你的简历内容</label>
+					<textarea id="resumeInput" rows="6" placeholder="粘贴简历核心内容：项目、技术栈、成果指标..."></textarea>
+
+					<label for="rejectInput">拒信文本 / 被拒经历</label>
+					<textarea id="rejectInput" rows="4" placeholder="粘贴 HR 回复，或者写下你这次面试的关键经过..."></textarea>
+
+					<label for="toneSelect">AI 语言风格</label>
+					<select id="toneSelect">
+						<option value="高情商">高情商（温暖鼓励）</option>
+						<option value="幽默嘴替">幽默嘴替（轻松解压）</option>
+						<option value="硬核教练">硬核教练（直接给改进）</option>
+					</select>
+
+					<button type="button" id="analyzeBtn" class="primary-btn">开始分析：原因 + 计划</button>
+					<div class="action-grid">
+						<button type="button" id="ventBtn" class="cta-btn warm">去他的，帮我开怼（发疯版）</button>
+						<button type="button" id="healBtn" class="cta-btn calm">太受挫了，先抱抱我（治愈版）</button>
+					</div>
+				</section>
+
+				<section class="panel result-two rebound-pair">
+					<div class="result-block">
+						<h3>情绪安抚</h3>
+						<div class="result-item" id="comfortText">先输入信息并点击分析后，这里会显示安抚建议。</div>
+					</div>
+					<div class="result-block">
+						<h3>反向吐槽</h3>
+						<div class="result-item" id="roastText">这里会给你一段有分寸的“嘴替式”解压文案。</div>
+					</div>
+				</section>
+
+				<section class="panel result-block">
+					<h3>落选原因分析</h3>
+					<div id="reasonList" class="analysis-list"></div>
+				</section>
+
+				<section class="panel checklist">
+					<div class="check-head">
+						<h2>4周反弹行动清单</h2>
+						<span id="checkStat">已完成 0/0</span>
+					</div>
+					<div id="checklistList" class="checklist-list"></div>
+					<div class="check-add">
+						<input type="text" id="newCheckInput" placeholder="添加你自己的反弹计划...">
+						<button type="button" id="addCheckBtn" class="secondary-btn">添加</button>
+					</div>
+				</section>
+
+				<section class="panel result-block">
+					<h3>替代岗位建议</h3>
+					<div id="altRoleList" class="analysis-list"></div>
+				</section>
+			</section>
+
+			<section class="mode-view hidden" id="reviewView">
+				<div class="review-grid">
+					<section class="panel review-input">
+						<h2>复盘工作台</h2>
+						<p class="sub">隔离失败，定位卡点，生成针对性训练方案。</p>
+						<div class="track-tabs" id="trackTabs">
+							<button type="button" class="track-btn active" data-track="knowledge">八股</button>
+							<button type="button" class="track-btn" data-track="algo">算法手撕</button>
+						</div>
+						<label for="reviewLangSelect">编程语言</label>
+						<select id="reviewLangSelect">
+							<option value="java">Java</option>
+							<option value="cpp">C++</option>
+							<option value="python">Python</option>
+							<option value="go">Go</option>
+							<option value="javascript">JavaScript</option>
+						</select>
+						<textarea id="painPointInput" rows="10" placeholder="记录你今天卡住的问题..."></textarea>
+						<button type="button" id="diagnoseBtn">AI 深度诊断与靶向学习</button>
+					</section>
+
+					<section class="review-output">
+						<div class="panel result-block" id="analysisCard">
+							<h3>AI 标准答案萃取</h3>
+							<div class="result-item" id="analysisText">输入痛点并点击诊断后，会在这里生成解析。</div>
+						</div>
+
+						<div class="panel result-block hidden" id="codeCard">
+							<h3>代码实现</h3>
+							<pre id="codeText"></pre>
+						</div>
+
+						<div class="panel result-two">
+							<div class="result-block">
+								<h3>核心概念</h3>
+								<div class="result-item" id="conceptText">-</div>
+							</div>
+							<div class="result-block">
+								<h3>行动建议</h3>
+								<div class="result-item" id="actionText">-</div>
+							</div>
+						</div>
+
+						<div class="panel result-two">
+							<div class="result-block">
+								<h3>相似面经洞察</h3>
+								<div id="insightsList" class="mini-list"></div>
+							</div>
+							<div class="result-block">
+								<h3>靶向复健资源</h3>
+								<div id="resourcesList" class="mini-list"></div>
+							</div>
+						</div>
+					</section>
+				</div>
+			</section>
+
+			<section class="mode-view hidden" id="simChatView">
+				<section class="panel hero">
+					<p class="badge">SIMULATED CONVERSATION LAB</p>
+					<h1>拟真聊天演练场</h1>
+					<p class="sub">和 AI 连续对话，像真实沟通一样来回交流，用于面试前热身与表达练习。</p>
+				</section>
+
+				<section class="panel sim-chat-panel">
+					<div class="sim-chat-toolbar">
+						<div class="sim-chat-select">
+							<label for="simFlavorSelect">对话风格</label>
+							<select id="simFlavorSelect">
+								<option value="heal">理性教练</option>
+								<option value="vent">高能嘴替</option>
+							</select>
+						</div>
+						<button type="button" id="simResetBtn" class="secondary-btn">清空对话</button>
+					</div>
+
+					<div class="chat-messages sim-messages" id="simMessages"></div>
+
+					<div class="chat-input-row">
+						<input type="text" id="simInput" placeholder="输入你想练习的话题，比如：如何解释项目亮点？">
+						<button type="button" id="simSendBtn">发送</button>
+					</div>
+				</section>
+			</section>
+			</section>
+
+			<section id="historyView" class="top-view hidden">
+				<section class="panel history-panel">
+					<div class="history-head">
+						<div>
+							<h2>历史记录</h2>
+							<p class="sub">保留分析、复盘和聊天关键片段，方便回看你的成长轨迹。</p>
+						</div>
+						<button type="button" id="clearHistoryBtn" class="secondary-btn">清空历史</button>
+					</div>
+					<div id="historyList" class="history-list"></div>
+				</section>
+			</section>
+		</main>
+	</div>
+
+	<div class="mobile-nav" id="mobileNav">
+		<button type="button" class="mobile-btn active" data-mode="emotion">情绪粉碎</button>
+		<button type="button" class="mobile-btn" data-mode="review">硬核复盘</button>
+		<button type="button" class="mobile-btn" data-mode="simchat">拟真聊天</button>
+	</div>
+
+	<div class="chat-overlay hidden" id="chatOverlay">
+		<div class="chat-panel panel">
+			<header class="chat-head">
+				<h2 id="chatTitle">治愈空间</h2>
+				<button type="button" id="closeChatBtn" class="secondary-btn">关闭</button>
+			</header>
+			<div class="chat-messages" id="chatMessages"></div>
+			<div class="chat-input-row">
+				<input type="text" id="chatInput" placeholder="继续说说你的想法...">
+				<button type="button" id="sendChatBtn">发送</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="toast hidden" id="toast"></div>
+	<script src="../static/js/app.js"></script>
+</body>
+</html>
